@@ -64,7 +64,7 @@ namespace BangazonWorkforceMVC.Models.ViewModels
             conn.Open();
             using (SqlCommand cmd = conn.CreateCommand())
             {
-                cmd.CommandText = "SELECT Id, Name FROM Cohort";
+                cmd.CommandText = "SELECT Id, Name FROM Department";
                 SqlDataReader reader = cmd.ExecuteReader();
 
                 List<Department> departments = new List<Department>();
