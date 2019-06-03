@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BangazonAPI.Models;
 
-namespace BangazonAPI.Models
+
+namespace BangazonWorkforceMVC.Models
 {
     public class Order
     {
