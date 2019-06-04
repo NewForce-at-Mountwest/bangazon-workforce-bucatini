@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BangazonAPI.Models
+namespace BangazonWorkforceMVC.Models
 {
     public class Employee
     {
@@ -13,7 +13,12 @@ namespace BangazonAPI.Models
         public string LastName { get; set; }
 
         public int DepartmentId { get; set; }
+
         public bool IsSupervisor { get; set; }
+
+        [Required]
+        [Display(Name = "Department")]
+        public Department Department {get; set; }
 
         public Computer CurrentComputer { get; set; } = new Computer();
 

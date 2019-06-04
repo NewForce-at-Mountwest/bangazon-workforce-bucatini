@@ -3,16 +3,25 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+<<<<<<< HEAD
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using BangazonAPI;
 using Microsoft.Extensions.Configuration;
 using BangazonAPI.Models;
+=======
+using BangazonWorkforceMVC.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using BangazonWorkforceMVC.Repositories;
+>>>>>>> master
 
 namespace BangazonWorkforceMVC.Controllers
 {
     public class EmployeeController : Controller
     {
+<<<<<<< HEAD
             private readonly IConfiguration _config;
 
             public EmployeeController(IConfiguration config)
@@ -31,11 +40,36 @@ namespace BangazonWorkforceMVC.Controllers
             public ActionResult Index()
         {
             return View();
+=======
+        private readonly IConfiguration _config;
+
+        public EmployeeController(IConfiguration config)
+        {
+            EmployeeRepository.SetConfig(config);
+        }
+
+        public SqlConnection Connection
+        {
+            get
+            {
+                return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            }
+        }
+        // GET: Employee
+        public ActionResult Index()
+        {
+            {
+                List<Employee> employees = EmployeeRepository.GetEmployees();
+                return View(employees);
+            }
+
+>>>>>>> master
         }
 
         // GET: Employee/Details/5
         public ActionResult Details(int id)
         {
+<<<<<<< HEAD
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
@@ -95,6 +129,10 @@ SELECT Employee.Id, Employee.FirstName, Employee.LastName, Computer.Make, Comput
         
             
         
+=======
+            return View();
+        }
+>>>>>>> master
 
         // GET: Employee/Create
         public ActionResult Create()
