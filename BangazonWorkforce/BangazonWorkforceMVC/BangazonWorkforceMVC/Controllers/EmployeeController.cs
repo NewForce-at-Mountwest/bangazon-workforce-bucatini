@@ -3,49 +3,21 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
-<<<<<<< HEAD
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using BangazonAPI;
-using Microsoft.Extensions.Configuration;
-using BangazonAPI.Models;
-=======
 using BangazonWorkforceMVC.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using BangazonWorkforceMVC.Repositories;
->>>>>>> master
 
 namespace BangazonWorkforceMVC.Controllers
 {
     public class EmployeeController : Controller
     {
-<<<<<<< HEAD
-            private readonly IConfiguration _config;
-
-            public EmployeeController(IConfiguration config)
-            {
-                _config = config;
-            }
-
-            public SqlConnection Connection
-            {
-                get
-                {
-                    return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-                }
-            }
-            // GET: Employee
-            public ActionResult Index()
-        {
-            return View();
-=======
         private readonly IConfiguration _config;
 
         public EmployeeController(IConfiguration config)
         {
-            EmployeeRepository.SetConfig(config);
+            _config = config;
         }
 
         public SqlConnection Connection
@@ -63,20 +35,18 @@ namespace BangazonWorkforceMVC.Controllers
                 return View(employees);
             }
 
->>>>>>> master
         }
 
         // GET: Employee/Details/5
         public ActionResult Details(int id)
         {
-<<<<<<< HEAD
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-SELECT Employee.Id, Employee.FirstName, Employee.LastName, Computer.Make, Computer.Manufacturer, Department.[Name], TrainingProgram.[Name] AS 'Training Name', TrainingProgram.Id, Computer.Id, TrainingProgram.StartDate, TrainingProgram.EndDate FROM Employee LEFT JOIN ComputerEmployee on Employee.Id = ComputerEmployee.EmployeeId LEFT JOIN Computer ON Computer.Id = ComputerEmployee.ComputerId LEFT JOIN EmployeeTraining on Employee.Id = EmployeeTraining.EmployeeId LEFT JOIN TrainingProgram ON TrainingProgram.Id = EmployeeTraining.TrainingProgramId LEFT JOIN Department ON Employee.DepartmentId = Department.Id WHERE Employee.Id = @id
+SELECT Employee.Id, Employee.FirstName, Employee.LastName, Computer.Make, Computer.Manufacturer, Department.[Name], TrainingProgram.[Name] AS 'Training Name', TrainingProgram.Id AS 'TPId', Computer.Id AS 'ComputerId', TrainingProgram.StartDate, TrainingProgram.EndDate FROM Employee LEFT JOIN ComputerEmployee on Employee.Id = ComputerEmployee.EmployeeId LEFT JOIN Computer ON Computer.Id = ComputerEmployee.ComputerId LEFT JOIN EmployeeTraining on Employee.Id = EmployeeTraining.EmployeeId LEFT JOIN TrainingProgram ON TrainingProgram.Id = EmployeeTraining.TrainingProgramId LEFT JOIN Department ON Employee.DepartmentId = Department.Id WHERE Employee.Id = @id
         ";
                     cmd.Parameters.Add(new SqlParameter("@id", id));
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -90,11 +60,6 @@ SELECT Employee.Id, Employee.FirstName, Employee.LastName, Computer.Make, Comput
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
                             LastName = reader.GetString(reader.GetOrdinal("LastName")),
-                            CurrentComputer = new Computer
-                            {
-                                Make = reader.GetString(reader.GetOrdinal("Make")),
-                                Manufacturer = reader.GetString(reader.GetOrdinal("Manufacturer"))
-                            },
                             CurrentDepartment = new Department
                             {
                                 Name = reader.GetString(reader.GetOrdinal("Name"))
@@ -104,8 +69,17 @@ SELECT Employee.Id, Employee.FirstName, Employee.LastName, Computer.Make, Comput
                         {
                             employeeDisplayed = employee;
                         }
+                        if (!reader.IsDBNull(reader.GetOrdinal("ComputerId")))
+                            {
+                            employee.CurrentComputer = new Computer
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("ComputerId")),
+                                Make = reader.GetString(reader.GetOrdinal("Make")),
+                                Manufacturer = reader.GetString(reader.GetOrdinal("Manufacturer"))
+                            };
+                        }
 
-                        if (employee.AssignedTraining != null)
+                        if (!reader.IsDBNull(reader.GetOrdinal("TPId")))
                         {
                             TrainingProgram program = new TrainingProgram
                             {
@@ -126,13 +100,9 @@ SELECT Employee.Id, Employee.FirstName, Employee.LastName, Computer.Make, Comput
                 }
             }
         }
-        
-            
-        
-=======
-            return View();
-        }
->>>>>>> master
+
+
+
 
         // GET: Employee/Create
         public ActionResult Create()
