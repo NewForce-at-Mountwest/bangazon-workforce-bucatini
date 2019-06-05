@@ -16,6 +16,7 @@ namespace BangazonWorkforceMVC.Models
 
         public Computer CurrentComputer { get; set; } = new Computer();
 
+        public List<Computer> EmployeeComputers { get; set; } = new List<Computer>();
     }
 }
 
