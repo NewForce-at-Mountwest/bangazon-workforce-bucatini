@@ -82,32 +82,17 @@ namespace BangazonWorkforceMVC.Controllers
             catch (Exception e)
             {
                 return View(model);
-
             }
         }
 
-       
-        //// GET: Employee/Delete/5
-        //public ActionResult Delete(int id)
-        //{
-        //    return View();
-        //}
-
-        //// POST: Employee/Delete/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Delete(int id, IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        // TODO: Add delete logic here
-
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
+            // GET: Employee/Details/5
+            public ActionResult Details(int id)
+            {
+                {
+                    Employee employee = EmployeeRepository.GetEmployeeDetail(id);
+                    return View(employee);
+                }
+            }
+        
     }
 }
