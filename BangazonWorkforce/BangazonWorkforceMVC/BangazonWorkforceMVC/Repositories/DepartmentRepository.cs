@@ -25,6 +25,26 @@ namespace BangazonWorkforceMVC.Repositories
                 return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             }
         }
+
+        public static Department CreateDepartment(Department department)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"INSERT INTO Department
+                ( Name, Budget )
+                VALUES
+                ( @name, @budget)";
+                    cmd.Parameters.Add(new SqlParameter("@name", department.Name));
+                    cmd.Parameters.Add(new SqlParameter("@budget", department.Budget));
+                    cmd.ExecuteNonQuery();
+
+                }
+                return department;
+            }
+        }
         public static Department GetDepartmentDetails(int id)
         {
             using (SqlConnection conn = Connection)
