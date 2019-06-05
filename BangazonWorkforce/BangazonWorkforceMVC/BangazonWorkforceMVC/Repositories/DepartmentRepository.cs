@@ -33,24 +33,34 @@ namespace BangazonWorkforceMVC.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT d.Name AS 'Department Name', d.Budget AS 'Budget', e.Id AS 'Employee Id' 
-                        FROM Employee e LEFT JOIN Department d ON e.DepartmentId = d.Id";
+                    cmd.CommandText = @"SELECT d.Id AS 'Department Id, d.[Name] AS 'Department Name', d.Budget AS 'Budget', e.Id AS 'Employee Id' FROM Department d JOIN Employee e ON e.DepartmentId = d.Id;";
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    List<Department> employees = new List<Department>();
+                    List<Department> DepartmentsWithEmployees = new List<Department>();
                     while (reader.Read())
                     {
-                        Department employee = new Department
+                        Department currentDepartment = new Department
                         {
+                            Id = reader.GetInt32(reader.GetOrdinal("Department Id")),
                             Name = reader.GetString(reader.GetOrdinal("Department Name")),
-                            Budget = reader.GetInt32(reader.GetOrdinal("Budget")),
-                            Employees = new Department()
-                            {
-                                Name = reader.GetString(reader.GetOrdinal("Department")),
-                            }
+                            Budget = reader.GetInt32(reader.GetOrdinal("Budget"))
+
                         };
 
-                        employees.Add(employee);
+                        Employee currentEmployee = new Employee
+                        {
+                             Id = reader.GetInt32(reader.GetOrdinal("Employee Id"))
+                        };
+                        
+                        if(DepartmentsWithEmployees.Any(d => d.Id == currentDepartment.Id))
+                        {
+
+                        }
+                        else
+                        {
+
+                        }
+                        
                     }
 
                     reader.Close();
