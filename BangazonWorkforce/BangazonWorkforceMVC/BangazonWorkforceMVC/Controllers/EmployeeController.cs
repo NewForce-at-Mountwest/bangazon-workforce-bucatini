@@ -31,16 +31,14 @@ namespace BangazonWorkforceMVC.Controllers
                 return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             }
         }
+
         // GET: Employee
         public ActionResult Index()
         {
-            return View();
-        }
-
-        // GET: Employee/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
+            {
+                List<Employee> employees = EmployeeRepository.GetEmployees();
+                return View(employees);
+            }
         }
 
         // GET: Employee/Create
@@ -64,7 +62,7 @@ namespace BangazonWorkforceMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Employee/Edit/5
+         // GET: Employee/Edit/5
         public ActionResult Edit(int id)
         {  
             EmployeeEditViewModel EmployeeEditViewModel = new EmployeeEditViewModel(id);   
@@ -81,33 +79,35 @@ namespace BangazonWorkforceMVC.Controllers
                 EmployeeRepository.UpdateEmployee(id, model);
                 return RedirectToAction(nameof(Create));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return View(model);
+
             }
         }
 
-        // GET: Employee/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+       
+        //// GET: Employee/Delete/5
+        //public ActionResult Delete(int id)
+        //{
+        //    return View();
+        //}
 
-        // POST: Employee/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
+        //// POST: Employee/Delete/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Delete(int id, IFormCollection collection)
+        //{
+        //    try
+        //    {
+        //        // TODO: Add delete logic here
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
     }
 }
