@@ -40,8 +40,14 @@ namespace BangazonWorkforceMVC.Controllers
         // GET: Employee/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            {
+                Employee employee = EmployeeRepository.GetOneEmployee(id);
+                return View(employee);
+            }
         }
+
+
+
 
         // GET: Employee/Create
         public ActionResult Create()

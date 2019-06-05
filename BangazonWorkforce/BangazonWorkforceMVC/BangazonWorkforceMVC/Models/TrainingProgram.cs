@@ -16,7 +16,7 @@ namespace BangazonWorkforceMVC.Models
 
         public int MaxAttendees { get; set; }
 
-        public List<Employee> EmployeesAttending { get; set; } = new List<Employee>();
+        public List<Employee> EmployeesAttending = new List<Employee>();
 
     }
 }
