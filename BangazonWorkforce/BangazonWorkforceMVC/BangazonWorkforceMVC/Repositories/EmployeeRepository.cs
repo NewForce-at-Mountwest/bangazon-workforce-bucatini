@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using BangazonWorkforceMVC.Models.View;
 
 namespace BangazonWorkforceMVC.Repositories
 {
@@ -37,7 +38,7 @@ namespace BangazonWorkforceMVC.Repositories
                         FROM Employee e LEFT JOIN Department d ON e.DepartmentId = d.Id";
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    List<Employee> employees = new List<Employee>();
+                    List<DepartmentEmployeeViewModel> employees = new List<DepartmentEmployeeViewModel>();
                     while (reader.Read())
                     {
                         Employee employee = new Employee
