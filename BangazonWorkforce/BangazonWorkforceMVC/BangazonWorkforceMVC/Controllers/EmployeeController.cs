@@ -60,80 +60,15 @@ namespace BangazonWorkforceMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(CreateEmployeeViewModel model)
         {
-            using (SqlConnection conn = Connection)
-            {
-                conn.Open();
-                using (SqlCommand cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = @"INSERT INTO Employee
-                ( FirstName, LastName, IsSupervisor, DepartmentId )
-                VALUES
-                ( @firstName, @lastName, @isSupervisor, @departmentId )";
-                    cmd.Parameters.Add(new SqlParameter("@firstName", model.Employee.FirstName));
-                    cmd.Parameters.Add(new SqlParameter("@lastName", model.Employee.LastName));
-                    cmd.Parameters.Add(new SqlParameter("@isSupervisor", model.Employee.IsSupervisor));
-                    cmd.Parameters.Add(new SqlParameter("@departmentId", model.Employee.DepartmentId));
-                    
-                    cmd.ExecuteNonQuery();
-
-                    return RedirectToAction(nameof(Index));
-                }
-            }
+            EmployeeRepository.CreateEmployee(model);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Employee/Edit/5
         public ActionResult Edit(int id)
-        {
-            using (SqlConnection conn = Connection)
-            {
-                conn.Open();
-                using (SqlCommand cmd = conn.CreateCommand())
-                {
-
-                    cmd.CommandText = @"
-                        SELECT
-                            e.Id, 
-                            e.FirstName,
-                            e.LastName, 
-                            e.IsSupervisor, 
-                            e.DepartmentId, 
-                            c.Id AS 'ComputerId',
-                            c.Make,
-                            c.Manufacturer
-                            FROM Employee e 
-                            LEFT JOIN ComputerEmployee ce ON e.Id = ce.EmployeeId
-                            LEFT JOIN Computer c ON c.Id = ce.ComputerId
-                            WHERE e.Id = @id";
-                    cmd.Parameters.Add(new SqlParameter("@id", id));
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    Employee employee = null;
-
-                    if (reader.Read())
-                    {
-                        employee = new Employee
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-                            LastName = reader.GetString(reader.GetOrdinal("LastName")),
-                            IsSupervisor = reader.GetBoolean(reader.GetOrdinal("IsSupervisor")),
-                            DepartmentId = reader.GetInt32(reader.GetOrdinal("DepartmentId"))
-                        };
-
-                        if (!reader.IsDBNull(reader.GetOrdinal("ComputerId"))) {
-                            employee.CurrentComputer.Id = reader.GetInt32(reader.GetOrdinal("ComputerId"));
-                            //                    //Manufacturer = reader.GetString(reader.GetOrdinal("Manufacturer")),
-                            //                    //Make = reader.GetString(reader.GetOrdinal("Make"))
-                            //                  }
-                        };
-                    }
-                    reader.Close();
-
-                    EmployeeEditViewModel EmployeeEditViewModel = new EmployeeEditViewModel(id);
-                       
-                    return View(EmployeeEditViewModel);
-                }
-            }
+        {  
+            EmployeeEditViewModel EmployeeEditViewModel = new EmployeeEditViewModel(id);   
+            return View(EmployeeEditViewModel);
         }
 
         // POST: Employees/Edit/5
@@ -143,51 +78,8 @@ namespace BangazonWorkforceMVC.Controllers
         {
             try
             {
-                using (SqlConnection conn = Connection)
-                {
-                    conn.Open();
-                    using (SqlCommand cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = @"UPDATE Employee
-                                            SET FirstName = @firstName, 
-                                            LastName = @lastName, 
-                                            IsSupervisor = @isSupervisor, 
-                                            DepartmentId = @departmentId
-                                            WHERE Id = @id";
-                        //cmd.Parameters.Add(new SqlParameter("@id", id));
-
-                        // Get all the computers that WERE assigned to the employee before we edited
-                        List<Computer> previouslyAssignedComputers = ComputerRepository.GetAllEmployeeComputers(id);
-
-                        DateTime dateTimeVariable = DateTime.Now;
-                        
-                        // Loop through all computers the employee has used
-                        //previouslyAssignedComputers.ForEach(computerId =>
-                        {
-                            // Was the computer already assigned? 
-                            // If so, do nothing-- we want to leave it alone so we can hold onto its assigned date
-                            // If not, create a new EmployeeComputer entry in the DB
-                            if (!previouslyAssignedComputers.Any(computer => computer.Id == model.Employee.CurrentComputer.Id))
-                            {
-                                cmd.CommandText += $" INSERT INTO ComputerEmployee (EmployeeId, ComputerId, AssignDate) VALUES (@id, @computerId, @dateTime)";
-                                cmd.CommandText += $" UPDATE ComputerEmployee SET UnassignDate = @dateTime WHERE EmployeeId = @id AND ComputerId != @computerId";
-
-                            }
-                        };
-
-                        cmd.Parameters.AddWithValue("@dateTime", dateTimeVariable);
-                        cmd.Parameters.Add(new SqlParameter("@firstName", model.Employee.FirstName));
-                        cmd.Parameters.Add(new SqlParameter("@lastName", model.Employee.LastName));
-                        cmd.Parameters.Add(new SqlParameter("@isSupervisor", model.Employee.IsSupervisor));
-                        cmd.Parameters.Add(new SqlParameter("@departmentId", model.Employee.DepartmentId));
-                        cmd.Parameters.Add(new SqlParameter("@computerId", model.Employee.CurrentComputer.Id));
-                        cmd.Parameters.Add(new SqlParameter("@id", id));
-
-                        int rowsAffected = cmd.ExecuteNonQuery();
-
-                    }
-                }
-                return RedirectToAction(nameof(Edit));
+                EmployeeRepository.UpdateEmployee(id, model);
+                return RedirectToAction(nameof(Create));
             }
             catch(Exception e)
             {

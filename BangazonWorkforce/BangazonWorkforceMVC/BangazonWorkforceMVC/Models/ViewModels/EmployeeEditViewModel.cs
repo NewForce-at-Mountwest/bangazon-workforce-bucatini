@@ -30,9 +30,7 @@ namespace BangazonWorkforceMVC.Models.ViewModels
                 .Select(department => new SelectListItem()
                 {
                     Text = department.Name,
-                    Value = department.Id.ToString(),
-                    
-
+                    Value = department.Id.ToString()
                 })
                 .ToList();
 
@@ -43,13 +41,12 @@ namespace BangazonWorkforceMVC.Models.ViewModels
                 Value = "0"
             });
 
-            //Query the database to get all cohorts
+            //Query the database to get all computers
             Computers = ComputerRepository.GetAllComputers()
                 .Select(computer => new SelectListItem()
                 {
                     Text = computer.Manufacturer + " " + computer.Make,
                     Value = computer.Id.ToString(),
-
                 })
                 .ToList();
 
