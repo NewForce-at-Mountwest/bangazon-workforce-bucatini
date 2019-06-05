@@ -77,7 +77,7 @@ namespace BangazonWorkforceMVC.Controllers
             try
             {
                 EmployeeRepository.UpdateEmployee(id, model);
-                return RedirectToAction(nameof(Create));
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception e)
             {
