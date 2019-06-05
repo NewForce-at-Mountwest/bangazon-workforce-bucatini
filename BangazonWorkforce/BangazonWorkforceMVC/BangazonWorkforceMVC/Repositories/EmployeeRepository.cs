@@ -61,7 +61,7 @@ namespace BangazonWorkforceMVC.Repositories
         }
 
         //Gets Single Employee Detail
-        public static Employee GetOneEmployee(int id)
+        public static Employee GetEmployeeDetail(int id)
         {
             using (SqlConnection conn = Connection)
             {
