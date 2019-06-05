@@ -38,7 +38,7 @@ namespace BangazonWorkforceMVC.Repositories
                         FROM Employee e LEFT JOIN Department d ON e.DepartmentId = d.Id";
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    List<DepartmentEmployeeViewModel> employees = new List<DepartmentEmployeeViewModel>();
+                    List<Employee> employees = new List<Employee>();
                     while (reader.Read())
                     {
                         Employee employee = new Employee
@@ -62,7 +62,7 @@ namespace BangazonWorkforceMVC.Repositories
         }
 
         //Gets Single Employee Detail
-        public static Employee GetEmployeeDetail(int id)
+        public static Employee GetOneEmployee(int id)
         {
             using (SqlConnection conn = Connection)
             {

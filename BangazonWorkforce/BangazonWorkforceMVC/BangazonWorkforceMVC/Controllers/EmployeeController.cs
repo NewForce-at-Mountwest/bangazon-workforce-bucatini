@@ -41,7 +41,7 @@ namespace BangazonWorkforceMVC.Controllers
         public ActionResult Details(int id)
         {
             {
-                Employee employee = EmployeeRepository.GetEmployeeDetail(id);
+                Employee employee = EmployeeRepository.GetOneEmployee(id);
                 return View(employee);
             }
         }
