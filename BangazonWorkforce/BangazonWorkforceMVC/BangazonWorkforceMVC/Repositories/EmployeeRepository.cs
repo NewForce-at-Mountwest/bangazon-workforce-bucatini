@@ -59,6 +59,8 @@ namespace BangazonWorkforceMVC.Repositories
                 }
             }
         }
+
+        //Gets Single Employee Detail
         public static Employee GetOneEmployee(int id)
         {
             using (SqlConnection conn = Connection)
@@ -86,10 +88,13 @@ SELECT Employee.Id, Employee.FirstName, Employee.LastName, Computer.Make, Comput
                                 Name = reader.GetString(reader.GetOrdinal("Name"))
                             }
                         };
+                        //If employeeDisplayed is null, make employee employeeDisplayed
                         if (employeeDisplayed == null)
                         {
                             employeeDisplayed = employee;
                         }
+
+                        //If Computer Id is not null, build a Computer object
                         if (!reader.IsDBNull(reader.GetOrdinal("ComputerId")))
                         {
                             employee.CurrentComputer = new Computer
@@ -100,6 +105,7 @@ SELECT Employee.Id, Employee.FirstName, Employee.LastName, Computer.Make, Comput
                             };
                         }
 
+                        //If TrainingProgram Id is not null, build a TrainingProgram object
                         if (!reader.IsDBNull(reader.GetOrdinal("TPId")))
                         {
                             TrainingProgram program = new TrainingProgram

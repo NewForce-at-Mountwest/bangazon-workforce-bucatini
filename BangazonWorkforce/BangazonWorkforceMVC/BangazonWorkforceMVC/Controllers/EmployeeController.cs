@@ -17,7 +17,7 @@ namespace BangazonWorkforceMVC.Controllers
 
         public EmployeeController(IConfiguration config)
         {
-            _config = config;
+            EmployeeRepository.SetConfig(config);
         }
 
         public SqlConnection Connection
