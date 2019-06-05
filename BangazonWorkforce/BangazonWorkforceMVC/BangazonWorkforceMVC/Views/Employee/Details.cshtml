@@ -1,0 +1,68 @@
+﻿@model BangazonWorkforceMVC.Models.Employee
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Employee</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CurrentDepartment)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CurrentDepartment.Name)
+        </dd>
+
+    </dl>
+    <h5>Employee's Computer Information</h5>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CurrentComputer.Make)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CurrentComputer.Make)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CurrentComputer.Manufacturer)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CurrentComputer.Manufacturer)
+        </dd>
+    </dl>
+    <h5>Employee's Training Programs</h5>
+    <hr />
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.AssignedTraining)
+    </dt>
+    <dd class="col-sm-10">
+        <ul>
+            @foreach(var i in Model.AssignedTraining)
+            {
+                    <li>@i.Name - <strong>Start Date:</strong> @i.StartDate</li>
+             
+            }
+  </ul>
+    </dd>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>
