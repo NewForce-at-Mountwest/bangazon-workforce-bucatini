@@ -1,4 +1,4 @@
-﻿using BangazonWorkforceMVC.Models;
+using BangazonWorkforceMVC.Models;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -25,9 +25,84 @@ namespace BangazonWorkforceMVC.Repositories
                 return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             }
         }
+
+        public static Department CreateDepartment(Department department)
+        {
+
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"INSERT INTO Department
+                ( Name, Budget )
+                VALUES
+                ( @name, @budget)";
+                    cmd.Parameters.Add(new SqlParameter("@name", department.Name));
+                    cmd.Parameters.Add(new SqlParameter("@budget", department.Budget));
+                    cmd.ExecuteNonQuery();
+
+                }
+                return department;
+            }
+        }
+        public static Department GetDepartmentDetails(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+SELECT Department.Id, Department.[Name] AS 'DeptName', Employee.Id, Employee.FirstName, Employee.LastName, Employee.DepartmentId, Department.Budget FROM Department LEFT JOIN Employee ON Department.Id = Employee.DepartmentId WHERE Department.Id = @id
+        ";
+                    cmd.Parameters.Add(new SqlParameter("@id", id));
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    Department departmentDisplayed = null;
+
+                    while (reader.Read())
+                    {
+                        Department department = new Department
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Name = reader.GetString(reader.GetOrdinal("DeptName")),
+                            Budget = reader.GetInt32(reader.GetOrdinal("Budget"))
+
+                        };
+
+                        //If departmentDisplayed is null, make department departmentDisplayed
+                        if (departmentDisplayed == null)
+                        {
+                            departmentDisplayed = department;
+                        }
+
+
+                        //Checks to see if departmentDisplayed has employees in the EmployeesInDepartment list. If it does, build the employee object and add it
+                        if (departmentDisplayed.EmployeesInDepartment != null)
+                        {
+                            Employee employee = new Employee
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                                LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                                DepartmentId = reader.GetInt32(reader.GetOrdinal("DepartmentId"))
+                            };
+                            departmentDisplayed.EmployeesInDepartment.Add(employee);
+
+                        } 
+                    };
+                    reader.Close();
+                    return departmentDisplayed;
+                }
+            }
+        }
         public static List<Department> GetAllDepartments()
         {
+<<<<<<< HEAD
             //List<Department> allDepartments = new List<Department>();
+=======
+>>>>>>> origin
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
