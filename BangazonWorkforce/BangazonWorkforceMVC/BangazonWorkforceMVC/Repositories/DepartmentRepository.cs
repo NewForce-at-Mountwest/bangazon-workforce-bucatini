@@ -77,10 +77,10 @@ SELECT Department.Id, Department.[Name] AS 'DeptName', Employee.Id, Employee.Fir
                             departmentDisplayed = department;
                         }
 
+
                         //Checks to see if departmentDisplayed has employees in the EmployeesInDepartment list. If it does, build the employee object and add it
                         if (departmentDisplayed.EmployeesInDepartment != null)
                         {
-
                             Employee employee = new Employee
                             {
                                 Id = reader.GetInt32(reader.GetOrdinal("Id")),
@@ -90,7 +90,7 @@ SELECT Department.Id, Department.[Name] AS 'DeptName', Employee.Id, Employee.Fir
                             };
                             departmentDisplayed.EmployeesInDepartment.Add(employee);
 
-                        }
+                        } 
                     };
                     reader.Close();
                     return departmentDisplayed;
