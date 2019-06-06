@@ -99,10 +99,7 @@ SELECT Department.Id, Department.[Name] AS 'DeptName', Employee.Id, Employee.Fir
         }
         public static List<Department> GetAllDepartments()
         {
-<<<<<<< HEAD
-            //List<Department> allDepartments = new List<Department>();
-=======
->>>>>>> origin
+
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
