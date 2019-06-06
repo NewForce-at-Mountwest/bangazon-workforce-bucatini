@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BangazonWorkforceMVC.Repositories;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.SqlClient;
@@ -11,10 +12,12 @@ namespace BangazonWorkforceMVC.Models.View
     {
         public Department department { get; set; }
 
-        [Display(Name = "Number of Employees Assigned:")]
+        [Display(Name = "Number of Employees:")]
         //Need to finish up view model for looping over employees to get number of people attending.
         public int numberOfEmployeesAssigned { get; set; }
 
+        
+        
         
 
     }

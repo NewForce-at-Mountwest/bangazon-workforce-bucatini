@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using BangazonWorkforceMVC.Repositories;
+using BangazonWorkforceMVC.Models.View;
 
 namespace BangazonWorkforceMVC.Controllers
 {
@@ -29,7 +30,8 @@ namespace BangazonWorkforceMVC.Controllers
         // GET: Department
         public ActionResult Index()
         {
-            return View();
+            List<DepartmentEmployeeViewModel> departments = DepartmentRepository.GetDepartments();
+            return View(departments);
         }
 
         // GET: Department/Details/5
