@@ -27,7 +27,7 @@ namespace BangazonWorkforceMVC.Repositories
         }
         public static List<Department> GetAllDepartments()
         {
-            List<Department> allDepartments = new List<Department>();
+            //List<Department> allDepartments = new List<Department>();
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
