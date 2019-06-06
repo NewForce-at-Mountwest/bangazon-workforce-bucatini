@@ -57,14 +57,6 @@ namespace BangazonWorkforceMVC.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
 
-                    cmd.CommandText = @"
-                        //SELECT
-                        //    e.Id, e.FirstName, e.LastName, e.DepartmentId,
-                        //    c.Id AS 'ComputerId'
-                        //FROM Employee e
-                        //LEFT JOIN ComputerEmployee ce ON ce.EmployeeId = e.Id
-                        //LEFT JOIN Computer c ON c.Id = ce.ComputerId";
-
                     cmd.CommandText = @"SELECT e.Id, e.FirstName, e.LastName, e.DepartmentId,
                         d.Id, d.Name AS 'Department'
                         FROM Employee e LEFT JOIN Department d ON e.DepartmentId = d.Id";
@@ -80,7 +72,7 @@ namespace BangazonWorkforceMVC.Repositories
                             FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
                             LastName = reader.GetString(reader.GetOrdinal("LastName")),
                             DepartmentId = reader.GetInt32(reader.GetOrdinal("DepartmentId")),
-                            CurrentDepartment =
+                            Department =
                             {
                                 Name = reader.GetString(reader.GetOrdinal("Department"))
                             }
@@ -119,7 +111,8 @@ namespace BangazonWorkforceMVC.Repositories
                             FROM Employee e 
                             LEFT JOIN ComputerEmployee ce ON e.Id = ce.EmployeeId
                             LEFT JOIN Computer c ON c.Id = ce.ComputerId
-                            WHERE e.Id = @id AND ce.AssignDate IS NOT NULL AND ce.UnassignDate IS NULL";
+                            WHERE e.Id = @id AND ((ce.AssignDate IS NOT NULL AND ce.UnassignDate IS NULL) OR (ce.AssignDate IS NULL))";
+
                     cmd.Parameters.Add(new SqlParameter("@id", id));
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -141,12 +134,11 @@ namespace BangazonWorkforceMVC.Repositories
                             employee.CurrentComputer.Id = reader.GetInt32(reader.GetOrdinal("ComputerId"));
                         };
                     }
-                    reader.Close();
 
+                    reader.Close();
                     return employee;
                 }
             }
-
         }
 
         public static Employee GetEmployeeDetail(int id)
@@ -171,7 +163,7 @@ SELECT Employee.Id, Employee.FirstName, Employee.LastName, Computer.Make, Comput
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
                             LastName = reader.GetString(reader.GetOrdinal("LastName")),
-                            CurrentDepartment = new Department
+                            Department = new Department
                             {
                                 Name = reader.GetString(reader.GetOrdinal("Name"))
                             }
