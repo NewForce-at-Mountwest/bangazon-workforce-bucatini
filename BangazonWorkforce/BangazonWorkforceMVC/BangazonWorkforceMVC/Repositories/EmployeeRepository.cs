@@ -84,13 +84,7 @@ namespace BangazonWorkforceMVC.Repositories
                             {
                                 Name = reader.GetString(reader.GetOrdinal("Department"))
                             }
-                        };
-
-                        //    if (!reader.IsDBNull(reader.GetOrdinal("ComputerId")))
-                        //{
-                        //    employee.CurrentComputer.Id = reader.GetInt32(reader.GetOrdinal("ComputerId"));
-                        //};
-                    
+                        };                 
 
                         employees.Add(employee);
                     }
@@ -265,11 +259,6 @@ SELECT Employee.Id, Employee.FirstName, Employee.LastName, Computer.Make, Comput
         }
     
 
-        //public static Employee GetOneEmployeeWithComputers(int id)
-        //{
-        //    Employee employee = GetOneEmployee(id);
-        //    employee.EmployeeComputers = ComputerRepository.GetAllEmployeeComputers(id);
-        //    return employee;
-        //}
+        
     }
 }
