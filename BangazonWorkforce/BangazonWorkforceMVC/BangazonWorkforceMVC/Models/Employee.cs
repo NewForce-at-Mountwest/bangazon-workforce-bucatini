@@ -18,12 +18,11 @@ namespace BangazonWorkforceMVC.Models
 
         [Required]
         [Display(Name = "Department")]
-        public Department Department {get; set; }
+        public Department Department { get; set; } = new Department();
 
         public Computer CurrentComputer { get; set; } = new Computer();
 
         [Display(Name = "Department")]
-        public Department CurrentDepartment { get; set; } = new Department();
 
         public List<TrainingProgram> AssignedTraining = new List<TrainingProgram>();
 

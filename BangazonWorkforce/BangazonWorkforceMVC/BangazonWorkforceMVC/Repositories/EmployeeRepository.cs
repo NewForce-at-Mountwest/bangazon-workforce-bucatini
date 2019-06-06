@@ -83,7 +83,7 @@ SELECT Employee.Id, Employee.FirstName, Employee.LastName, Computer.Make, Comput
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
                             LastName = reader.GetString(reader.GetOrdinal("LastName")),
-                            CurrentDepartment = new Department
+                            Department = new Department
                             {
                                 Name = reader.GetString(reader.GetOrdinal("Name"))
                             }
