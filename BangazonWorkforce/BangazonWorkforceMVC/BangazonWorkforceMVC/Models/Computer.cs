@@ -8,7 +8,7 @@ namespace BangazonWorkforceMVC.Models
     public class Computer
     {
 
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         public string Manufacturer { get; set; }
 
