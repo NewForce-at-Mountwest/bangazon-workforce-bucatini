@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
-﻿using BangazonWorkforceMVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using BangazonWorkforceMVC.Models;
+using BangazonWorkforceMVC.Models.ViewModels;
+
 
 namespace BangazonWorkforceMVC.Repositories
 {
@@ -25,6 +27,28 @@ namespace BangazonWorkforceMVC.Repositories
                 return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             }
         }
+
+        public static void CreateEmployee(CreateEmployeeViewModel model)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"INSERT INTO Employee
+                ( FirstName, LastName, IsSupervisor, DepartmentId )
+                VALUES
+                ( @firstName, @lastName, @isSupervisor, @departmentId )";
+                    cmd.Parameters.Add(new SqlParameter("@firstName", model.Employee.FirstName));
+                    cmd.Parameters.Add(new SqlParameter("@lastName", model.Employee.LastName));
+                    cmd.Parameters.Add(new SqlParameter("@isSupervisor", model.Employee.IsSupervisor));
+                    cmd.Parameters.Add(new SqlParameter("@departmentId", model.Employee.DepartmentId));
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
         public static List<Employee> GetEmployees()
         {
             using (SqlConnection conn = Connection)
@@ -32,23 +56,27 @@ namespace BangazonWorkforceMVC.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
+
                     cmd.CommandText = @"SELECT e.Id, e.FirstName, e.LastName, e.DepartmentId,
                         d.Id, d.Name AS 'Department'
                         FROM Employee e LEFT JOIN Department d ON e.DepartmentId = d.Id";
+
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    List<Employee> employees = new List<Employee>();
+                    Listhttps://github.com/NewForce-at-Mountwest/bangazon-workforce-bucatini/pull/5/conflict?name=BangazonWorkforce%252FBangazonWorkforceMVC%252FBangazonWorkforceMVC%252FRepositories%252FEmployeeRepository.cs&ancestor_oid=24952a17a54ce90715083e0dd8935fbd761cd317&base_oid=f236a389f75e7ff1bca1839453a3d949cf28bdcb&head_oid=5bd2bce84a37845c1eccef42883f746d4d9dc8bd<Employee> employees = new List<Employee>();
                     while (reader.Read())
                     {
                         Employee employee = new Employee
                         {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
                             LastName = reader.GetString(reader.GetOrdinal("LastName")),
-                            Department = new Department()
+                            DepartmentId = reader.GetInt32(reader.GetOrdinal("DepartmentId")),
+                            Department =
                             {
-                                Name = reader.GetString(reader.GetOrdinal("Department")),
+                                Name = reader.GetString(reader.GetOrdinal("Department"))
                             }
-                        };
+                        };                 
 
                         employees.Add(employee);
                     }
@@ -60,7 +88,60 @@ namespace BangazonWorkforceMVC.Repositories
             }
         }
 
-        //Gets Single Employee Detail
+        public static Employee GetOneEmployee(int id)
+
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+
+                        SELECT
+                            e.Id, 
+                            e.FirstName,
+                            e.LastName, 
+                            e.IsSupervisor, 
+                            e.DepartmentId, 
+                            c.Id AS 'ComputerId',
+                            c.Make,
+                            c.Manufacturer,
+                            ce.AssignDate,
+                            ce.UnassignDate
+                            FROM Employee e 
+                            LEFT JOIN ComputerEmployee ce ON e.Id = ce.EmployeeId
+                            LEFT JOIN Computer c ON c.Id = ce.ComputerId
+                            WHERE e.Id = @id AND ((ce.AssignDate IS NOT NULL AND ce.UnassignDate IS NULL) OR (ce.AssignDate IS NULL))";
+
+                    cmd.Parameters.Add(new SqlParameter("@id", id));
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    Employee employee = null;
+
+                    if (reader.Read())
+                    {
+                        employee = new Employee
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                            LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                            IsSupervisor = reader.GetBoolean(reader.GetOrdinal("IsSupervisor")),
+                            DepartmentId = reader.GetInt32(reader.GetOrdinal("DepartmentId"))
+                        };
+
+                        if (!reader.IsDBNull(reader.GetOrdinal("ComputerId")))
+                        {
+                            employee.CurrentComputer.Id = reader.GetInt32(reader.GetOrdinal("ComputerId"));
+                        };
+                    }
+
+                    reader.Close();
+                    return employee;
+                }
+            }
+        }
+
         public static Employee GetEmployeeDetail(int id)
         {
             using (SqlConnection conn = Connection)
@@ -83,7 +164,7 @@ SELECT Employee.Id, Employee.FirstName, Employee.LastName, Computer.Make, Comput
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
                             LastName = reader.GetString(reader.GetOrdinal("LastName")),
-                            CurrentDepartment = new Department
+                            Department = new Department
                             {
                                 Name = reader.GetString(reader.GetOrdinal("Name"))
                             }
@@ -93,7 +174,7 @@ SELECT Employee.Id, Employee.FirstName, Employee.LastName, Computer.Make, Comput
                         {
                             employeeDisplayed = employee;
                         }
-                       
+
                         //If Computer Id is not null, build a Computer object
                         if (!reader.IsDBNull(reader.GetOrdinal("ComputerId")))
                         {
@@ -103,7 +184,7 @@ SELECT Employee.Id, Employee.FirstName, Employee.LastName, Computer.Make, Comput
                                 Make = reader.GetString(reader.GetOrdinal("Make")),
                                 Manufacturer = reader.GetString(reader.GetOrdinal("Manufacturer"))
                             };
-                           
+
                         }
 
                         //If TrainingProgram Id is not null, build a TrainingProgram object
@@ -128,5 +209,49 @@ SELECT Employee.Id, Employee.FirstName, Employee.LastName, Computer.Make, Comput
                 }
             }
         }
+
+        public static void UpdateEmployee (int id, EmployeeEditViewModel model)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    // Update the employee's basic info
+                    string command = @"UPDATE Employee
+                                            SET FirstName = @firstName, 
+                                            LastName = @lastName, 
+                                            IsSupervisor = @isSupervisor, 
+                                            DepartmentId = @departmentId
+                                            WHERE Id = @id";
+
+                    // Get the employee's information before edit
+                    Employee uneditedEmployee = EmployeeRepository.GetOneEmployee(id);
+
+                    if (uneditedEmployee.CurrentComputer.Id != model.Employee.CurrentComputer.Id)
+                    {
+                        command += $" INSERT INTO ComputerEmployee (EmployeeId, ComputerId, AssignDate, UnassignDate) VALUES (@id, @computerId, @dateTime, NULL)";
+                        command += $" UPDATE ComputerEmployee SET UnassignDate = @dateTime WHERE EmployeeId = @id AND ComputerId != @computerId";
+
+                    };
+
+                    DateTime dateTimeVariable = DateTime.Now;
+                    cmd.Parameters.AddWithValue("@dateTime", dateTimeVariable);
+                    cmd.Parameters.Add(new SqlParameter("@firstName", model.Employee.FirstName));
+                    cmd.Parameters.Add(new SqlParameter("@lastName", model.Employee.LastName));
+                    cmd.Parameters.Add(new SqlParameter("@isSupervisor", model.Employee.IsSupervisor));
+                    cmd.Parameters.Add(new SqlParameter("@departmentId", model.Employee.DepartmentId));
+                    cmd.Parameters.Add(new SqlParameter("@computerId", model.Employee.CurrentComputer.Id));
+                    cmd.Parameters.Add(new SqlParameter("@id", id));
+
+                    cmd.CommandText = command;
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                }
+            }
+        }
+    
+
+        
     }
 }
