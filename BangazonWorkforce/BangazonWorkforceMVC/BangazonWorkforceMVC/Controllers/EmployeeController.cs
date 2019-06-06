@@ -4,10 +4,11 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using BangazonWorkforceMVC.Models;
+using BangazonWorkforceMVC.Models.ViewModels;
+using BangazonWorkforceMVC.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using BangazonWorkforceMVC.Repositories;
 
 namespace BangazonWorkforceMVC.Controllers
 {
@@ -18,6 +19,9 @@ namespace BangazonWorkforceMVC.Controllers
         public EmployeeController(IConfiguration config)
         {
             EmployeeRepository.SetConfig(config);
+            DepartmentRepository.SetConfig(config);
+            ComputerRepository.SetConfig(config);
+            _config = config;
         }
 
         public SqlConnection Connection
@@ -27,6 +31,7 @@ namespace BangazonWorkforceMVC.Controllers
                 return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             }
         }
+
         // GET: Employee
         public ActionResult Index()
         {
@@ -34,88 +39,60 @@ namespace BangazonWorkforceMVC.Controllers
                 List<Employee> employees = EmployeeRepository.GetEmployees();
                 return View(employees);
             }
-
         }
-
-        // GET: Employee/Details/5
-        public ActionResult Details(int id)
-        {
-            {
-                Employee employee = EmployeeRepository.GetEmployeeDetail(id);
-                return View(employee);
-            }
-        }
-
-
-
 
         // GET: Employee/Create
         public ActionResult Create()
         {
-            return View();
+            // Create a new instance of a CreateEmployeeViewModel
+            // If we want to get all the departments, we need to use the constructor that's expecting a connection string. 
+            // When we create this instance, the constructor will run and get all the departments.
+            CreateEmployeeViewModel createEmployeeViewModel = new CreateEmployeeViewModel(_config.GetConnectionString("DefaultConnection"));
+
+            // Once we've created it, we can pass it to the view
+            return View(createEmployeeViewModel);
         }
 
-        // POST: Employee/Create
+        // POST: Employees/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(CreateEmployeeViewModel model)
         {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            EmployeeRepository.CreateEmployee(model);
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: Employee/Edit/5
+         // GET: Employee/Edit/5
         public ActionResult Edit(int id)
-        {
-            return View();
+        {  
+            EmployeeEditViewModel EmployeeEditViewModel = new EmployeeEditViewModel(id);   
+            return View(EmployeeEditViewModel);
         }
 
-        // POST: Employee/Edit/5
+        // POST: Employees/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, EmployeeEditViewModel model)
         {
             try
             {
-                // TODO: Add update logic here
-
+                EmployeeRepository.UpdateEmployee(id, model);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                return View(model);
             }
         }
 
-        // GET: Employee/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Employee/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
+            // GET: Employee/Details/5
+            public ActionResult Details(int id)
             {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
+                {
+                    Employee employee = EmployeeRepository.GetEmployeeDetail(id);
+                    return View(employee);
+                }
             }
-            catch
-            {
-                return View();
-            }
-        }
+        
     }
 }

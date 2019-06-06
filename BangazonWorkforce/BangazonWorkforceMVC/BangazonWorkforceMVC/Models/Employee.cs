@@ -22,10 +22,14 @@ namespace BangazonWorkforceMVC.Models
 
         public Computer CurrentComputer { get; set; } = new Computer();
 
+<<<<<<< HEAD
         [Display(Name = "Department")]
 
+=======
+        public List<Computer> EmployeeComputers { get; set; } = new List<Computer>();
+        
+>>>>>>> master
         public List<TrainingProgram> AssignedTraining = new List<TrainingProgram>();
-
     }
 }
 

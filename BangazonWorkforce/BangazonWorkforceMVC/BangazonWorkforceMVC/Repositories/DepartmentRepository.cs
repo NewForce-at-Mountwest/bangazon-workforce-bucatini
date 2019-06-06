@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace BangazonWorkforceMVC.Repositories
 {
     public class DepartmentRepository
     {
-
         private static IConfiguration _config;
 
         public static void SetConfig(IConfiguration configuration)
@@ -28,6 +28,8 @@ namespace BangazonWorkforceMVC.Repositories
 
         public static Department CreateDepartment(Department department)
         {
+
+            List<Department> allDepartments = new List<Department>();
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
@@ -67,9 +69,9 @@ SELECT Department.Id, Department.[Name] AS 'DeptName', Employee.Id, Employee.Fir
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             Name = reader.GetString(reader.GetOrdinal("DeptName")),
                             Budget = reader.GetInt32(reader.GetOrdinal("Budget"))
-                            
-                        };   
-                        
+
+                        };
+
                         //If departmentDisplayed is null, make department departmentDisplayed
                         if (departmentDisplayed == null)
                         {
@@ -93,7 +95,33 @@ SELECT Department.Id, Department.[Name] AS 'DeptName', Employee.Id, Employee.Fir
                     };
                     reader.Close();
                     return departmentDisplayed;
+                }
+            }
+        }
 
+  public static List<Department> GetAllDepartments()
+        {
+                 using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT Id, Name FROM Department";
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    List<Department> departments = new List<Department>();
+                    while (reader.Read())
+                    {
+                        departments.Add(new Department
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Name = reader.GetString(reader.GetOrdinal("Name")),
+                        });
+                    }
+
+                    reader.Close();
+
+                    return departments;
                 }
             }
         }
