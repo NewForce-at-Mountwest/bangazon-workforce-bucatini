@@ -63,7 +63,7 @@ namespace BangazonWorkforceMVC.Repositories
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    Listhttps://github.com/NewForce-at-Mountwest/bangazon-workforce-bucatini/pull/5/conflict?name=BangazonWorkforce%252FBangazonWorkforceMVC%252FBangazonWorkforceMVC%252FRepositories%252FEmployeeRepository.cs&ancestor_oid=24952a17a54ce90715083e0dd8935fbd761cd317&base_oid=f236a389f75e7ff1bca1839453a3d949cf28bdcb&head_oid=5bd2bce84a37845c1eccef42883f746d4d9dc8bd<Employee> employees = new List<Employee>();
+                    List<Employee> employees = new List<Employee>();
                     while (reader.Read())
                     {
                         Employee employee = new Employee
