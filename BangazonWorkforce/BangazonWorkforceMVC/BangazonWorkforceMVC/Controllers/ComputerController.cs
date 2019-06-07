@@ -42,7 +42,8 @@ namespace BangazonWorkforceMVC.Controllers
         // GET: Computer/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            Computer Computer = ComputerRepository.GetComputer(id);
+            return View(Computer);
         }
 
         // GET: Computer/Create
@@ -70,7 +71,8 @@ namespace BangazonWorkforceMVC.Controllers
         // GET: Computer/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            Computer Computer = ComputerRepository.GetComputer(id);
+            return View(Computer);
         }
 
         // POST: Computer/Edit/5
