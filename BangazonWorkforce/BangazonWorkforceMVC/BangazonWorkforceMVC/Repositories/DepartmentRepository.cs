@@ -43,7 +43,7 @@ namespace BangazonWorkforceMVC.Repositories
                 {
 
                     // Retrieving all of a departments info plus counting through employees with matching departmentId
-                    cmd.CommandText = @"SELECT d.Id AS 'Department Id', d.[Name] AS 'Department Name', d.Budget AS 'Budget', COUNT(e.DepartmentId) AS 'Number of Employees' FROM Department d JOIN Employee e ON d.Id = e.DepartmentId GROUP BY d.Id, d.[Name], d.Budget;";
+                    cmd.CommandText = @"SELECT d.Id AS 'Department Id', d.[Name] AS 'Department Name', d.Budget AS 'Budget', COUNT(e.DepartmentId) AS 'Number of Employees' FROM Department d LEFT JOIN Employee e ON d.Id = e.DepartmentId GROUP BY d.Id, d.[Name], d.Budget;";
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     List<DepartmentEmployeeViewModel> DepartmentsWithEmployees = new List<DepartmentEmployeeViewModel>();

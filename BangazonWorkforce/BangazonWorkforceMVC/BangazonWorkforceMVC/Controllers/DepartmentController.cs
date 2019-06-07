@@ -43,14 +43,15 @@ namespace BangazonWorkforceMVC.Controllers
         public ActionResult Details(int id)
         {
 
-            return View();
+            Department department = DepartmentRepository.GetDepartmentDetails(id);
+            ViewData["Title"] = department.Name;
+            return View(department);
         }
 
         // GET: Department/Create
-        public ActionResult Create()
+        public ActionResult Create(int id)
         {
             Department department = DepartmentRepository.GetDepartmentDetails(id);
-            ViewData["Title"] = department.Name;
             return View(department);
         }
 
@@ -58,14 +59,7 @@ namespace BangazonWorkforceMVC.Controllers
 
         // POST: Department/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-            }
-                return RedirectToAction(nameof(Index));}
+        [ValidateAntiForgeryToken]  
         public async Task<ActionResult> Create(Department department)
         {
             try
