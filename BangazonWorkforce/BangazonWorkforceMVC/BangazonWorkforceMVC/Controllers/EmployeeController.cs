@@ -39,13 +39,16 @@ namespace BangazonWorkforceMVC.Controllers
                 List<Employee> employees = EmployeeRepository.GetEmployees();
                 return View(employees);
             }
+
         }
+
+
 
         // GET: Employee/Create
         public ActionResult Create()
         {
             // Create a new instance of a CreateEmployeeViewModel
-            // If we want to get all the departments, we need to use the constructor that's expecting a connection string. 
+            // If we want to get all the departments, we need to use the constructor that's expecting a connection string.
             // When we create this instance, the constructor will run and get all the departments.
             CreateEmployeeViewModel createEmployeeViewModel = new CreateEmployeeViewModel(_config.GetConnectionString("DefaultConnection"));
 
@@ -64,8 +67,8 @@ namespace BangazonWorkforceMVC.Controllers
 
          // GET: Employee/Edit/5
         public ActionResult Edit(int id)
-        {  
-            EmployeeEditViewModel EmployeeEditViewModel = new EmployeeEditViewModel(id);   
+        {
+            EmployeeEditViewModel EmployeeEditViewModel = new EmployeeEditViewModel(id);
             return View(EmployeeEditViewModel);
         }
 
@@ -93,6 +96,6 @@ namespace BangazonWorkforceMVC.Controllers
                     return View(employee);
                 }
             }
-        
+
     }
 }

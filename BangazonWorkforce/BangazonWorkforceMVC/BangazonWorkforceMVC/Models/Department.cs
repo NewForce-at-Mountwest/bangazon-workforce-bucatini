@@ -14,6 +14,7 @@ namespace BangazonWorkforceMVC.Models
 
         public string Name { get; set; }
 
+
         [Display(Name = "Employees in Department")]
         public List<Employee> EmployeesInDepartment { get; set; } = new List<Employee>();
     }

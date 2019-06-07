@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
-using BangazonWorkforceMVC.Models;
-using BangazonWorkforceMVC.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using BangazonWorkforceMVC.Repositories;
+using BangazonWorkforceMVC.Models.View;
+
+using BangazonWorkforceMVC.Models;
+
 
 namespace BangazonWorkforceMVC.Controllers
 {
@@ -30,12 +33,16 @@ namespace BangazonWorkforceMVC.Controllers
         // GET: Department
         public ActionResult Index()
         {
-            return View();
+
+            List<DepartmentEmployeeViewModel> departments = DepartmentRepository.GetDepartments();
+            return View(departments);
+
         }
 
         // GET: Department/Details/5
         public ActionResult Details(int id)
         {
+
             Department department = DepartmentRepository.GetDepartmentDetails(id);
             ViewData["Title"] = department.Name;
             return View(department);
@@ -48,15 +55,18 @@ namespace BangazonWorkforceMVC.Controllers
             return View(department);
         }
 
+
+
         // POST: Department/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]  
         public async Task<ActionResult> Create(Department department)
         {
             try
             {
                 DepartmentRepository.CreateDepartment(department);
                 return RedirectToAction(nameof(Index));
+
 
             }
             catch

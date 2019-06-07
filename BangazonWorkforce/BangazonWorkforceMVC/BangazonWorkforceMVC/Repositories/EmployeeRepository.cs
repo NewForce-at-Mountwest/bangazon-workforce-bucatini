@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using BangazonWorkforceMVC.Models.View;
 using Microsoft.Extensions.Configuration;
 using BangazonWorkforceMVC.Models;
 using BangazonWorkforceMVC.Models.ViewModels;
@@ -88,6 +89,8 @@ namespace BangazonWorkforceMVC.Repositories
             }
         }
 
+
+        //Gets Single Employee Detail
         public static Employee GetOneEmployee(int id)
 
         {
@@ -143,6 +146,7 @@ namespace BangazonWorkforceMVC.Repositories
         }
 
         public static Employee GetEmployeeDetail(int id)
+
         {
             using (SqlConnection conn = Connection)
             {
