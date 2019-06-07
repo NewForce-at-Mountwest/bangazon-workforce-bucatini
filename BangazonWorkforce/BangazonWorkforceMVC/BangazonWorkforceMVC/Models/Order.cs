@@ -16,9 +16,6 @@ namespace BangazonWorkforceMVC.Models
         public PaymentType PaymentType { get; set; }
         public Customer Customer { get; set; }
 
-
         public List<Product> OrderProducts { get; set; } = new List<Product>();
-        
-
     }
 }

@@ -9,6 +9,9 @@ using Microsoft.Extensions.Configuration;
 using BangazonWorkforceMVC.Repositories;
 using BangazonWorkforceMVC.Models.View;
 
+using BangazonWorkforceMVC.Models;
+
+
 namespace BangazonWorkforceMVC.Controllers
 {
     public class DepartmentController : Controller
@@ -30,21 +33,28 @@ namespace BangazonWorkforceMVC.Controllers
         // GET: Department
         public ActionResult Index()
         {
+
             List<DepartmentEmployeeViewModel> departments = DepartmentRepository.GetDepartments();
             return View(departments);
+
         }
 
         // GET: Department/Details/5
         public ActionResult Details(int id)
         {
+
             return View();
         }
 
         // GET: Department/Create
         public ActionResult Create()
         {
-            return View();
+            Department department = DepartmentRepository.GetDepartmentDetails(id);
+            ViewData["Title"] = department.Name;
+            return View(department);
         }
+
+
 
         // POST: Department/Create
         [HttpPost]
@@ -54,17 +64,24 @@ namespace BangazonWorkforceMVC.Controllers
             try
             {
                 // TODO: Add insert logic here
-
+            }
+                return RedirectToAction(nameof(Index));}
+        public async Task<ActionResult> Create(Department department)
+        {
+            try
+            {
+                DepartmentRepository.CreateDepartment(department);
                 return RedirectToAction(nameof(Index));
+
+
             }
             catch
             {
                 return View();
             }
         }
-
-        // GET: Department/Edit/5
-        public ActionResult Edit(int id)
+            // GET: Department/Edit/5
+            public ActionResult Edit(int id)
         {
             return View();
         }
