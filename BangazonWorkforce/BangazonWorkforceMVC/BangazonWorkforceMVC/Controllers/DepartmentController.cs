@@ -42,30 +42,30 @@ namespace BangazonWorkforceMVC.Controllers
         }
 
         // GET: Department/Create
-        public ActionResult Create()
+        public ActionResult Create(int id)
         {
-            return View();
+            Department department = DepartmentRepository.GetDepartmentDetails(id);
+            return View(department);
         }
 
         // POST: Department/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(Department department)
         {
             try
             {
-                // TODO: Add insert logic here
-
+                DepartmentRepository.CreateDepartment(department);
                 return RedirectToAction(nameof(Index));
+
             }
             catch
             {
                 return View();
             }
         }
-
-        // GET: Department/Edit/5
-        public ActionResult Edit(int id)
+            // GET: Department/Edit/5
+            public ActionResult Edit(int id)
         {
             return View();
         }

@@ -76,7 +76,7 @@ namespace BangazonWorkforceMVC.Repositories
                             {
                                 Name = reader.GetString(reader.GetOrdinal("Department"))
                             }
-                        };                 
+                        };
 
                         employees.Add(employee);
                     }
@@ -99,17 +99,17 @@ namespace BangazonWorkforceMVC.Repositories
                     cmd.CommandText = @"
 
                         SELECT
-                            e.Id, 
+                            e.Id,
                             e.FirstName,
-                            e.LastName, 
-                            e.IsSupervisor, 
-                            e.DepartmentId, 
+                            e.LastName,
+                            e.IsSupervisor,
+                            e.DepartmentId,
                             c.Id AS 'ComputerId',
                             c.Make,
                             c.Manufacturer,
                             ce.AssignDate,
                             ce.UnassignDate
-                            FROM Employee e 
+                            FROM Employee e
                             LEFT JOIN ComputerEmployee ce ON e.Id = ce.EmployeeId
                             LEFT JOIN Computer c ON c.Id = ce.ComputerId
                             WHERE e.Id = @id AND ((ce.AssignDate IS NOT NULL AND ce.UnassignDate IS NULL) OR (ce.AssignDate IS NULL))";
@@ -219,9 +219,9 @@ SELECT Employee.Id, Employee.FirstName, Employee.LastName, Computer.Make, Comput
                 {
                     // Update the employee's basic info
                     string command = @"UPDATE Employee
-                                            SET FirstName = @firstName, 
-                                            LastName = @lastName, 
-                                            IsSupervisor = @isSupervisor, 
+                                            SET FirstName = @firstName,
+                                            LastName = @lastName,
+                                            IsSupervisor = @isSupervisor,
                                             DepartmentId = @departmentId
                                             WHERE Id = @id";
 
@@ -250,8 +250,8 @@ SELECT Employee.Id, Employee.FirstName, Employee.LastName, Computer.Make, Comput
                 }
             }
         }
-    
 
-        
+
+
     }
 }
