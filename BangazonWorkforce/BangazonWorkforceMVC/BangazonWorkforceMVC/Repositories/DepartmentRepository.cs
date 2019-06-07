@@ -53,7 +53,7 @@ namespace BangazonWorkforceMVC.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-SELECT Department.Id, Department.[Name] AS 'DeptName', Employee.Id, Employee.FirstName, Employee.LastName, Employee.DepartmentId, Department.Budget FROM Department LEFT JOIN Employee ON Department.Id = Employee.DepartmentId WHERE Department.Id = @id
+SELECT Department.Id, Department.[Name] AS 'DeptName', Employee.Id, Employee.FirstName AS 'FirstName', Employee.LastName AS 'LastName', Employee.DepartmentId, Department.Budget FROM Department LEFT JOIN Employee ON Department.Id = Employee.DepartmentId WHERE Department.Id = @id
         ";
                     cmd.Parameters.Add(new SqlParameter("@id", id));
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -77,18 +77,14 @@ SELECT Department.Id, Department.[Name] AS 'DeptName', Employee.Id, Employee.Fir
                         }
 
                         //Checks to see if departmentDisplayed has employees in the EmployeesInDepartment list. If it does, build the employee object and add it
-                        if(departmentDisplayed.EmployeesInDepartment != null)
+                        if (!reader.IsDBNull(reader.GetOrdinal("FirstName")))
                         {
-
-                                    Employee employee = new Employee
-                                    {
-                                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                        FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-                                        LastName = reader.GetString(reader.GetOrdinal("LastName")),
-                                        DepartmentId = reader.GetInt32(reader.GetOrdinal("DepartmentId"))
-                                    };
+                            Employee employee = new Employee
+                            {
+                                FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                                LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                            };
                             departmentDisplayed.EmployeesInDepartment.Add(employee);
-
                         }
                     };
                     reader.Close();
