@@ -144,6 +144,7 @@ SELECT Department.Id, Department.[Name] AS 'DeptName', Employee.Id, Employee.Fir
 
     public static List<Department> GetAllDepartments()
         {
+
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
